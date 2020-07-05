@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<page>
+    <referenceContainer name="content">
+        <block
+                class="Magento\Framework\View\Element\Template"
+                name="confirmation"
+                template="Alvor_SalesRuleConfirmation::confirmation.phtml"
+                cacheable="false"
+        />
+    </referenceContainer>
+</page>

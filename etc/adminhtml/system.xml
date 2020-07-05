@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="confirmation" translate="label" type="text" sortOrder="2000" showInDefault="1" showInWebsite="1" showInStore="1">
+            <resource>Alvor_SalesRuleConfirmation::config</resource>
+            <label>Salesrule Email Confirmation</label>
+            <tab>sales</tab>
+                <group id="general" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1" translate="label">
+                    <label>General Settings</label>
+                    <field id="email_alias" translate="label,hint" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Email alias</label>
+                    </field>
+                </group>
+                <group id="confirmation" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1" translate="label">
+                    <label>Confirmation Emails</label>
+                    <field id="ecomm_emails" translate="label,hint" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Marketing managers email</label>
+                        <hint>Comma separated emails list</hint>
+                    </field>
+                    <field id="fin_emails" translate="label" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Financial managers email</label>
+                    </field>
+                </group>
+                <group id="notification" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1" translate="label">
+                    <label>Notification Email</label>
+                    <comment>Will be notified on rule save</comment>
+                    <field id="marketing_emails" translate="label" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Marketing managers email</label>
+                    </field>
+                    <field id="on_decline" translate="label" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Send Notification on rule decline</label>
+                    </field>
+                    <field id="on_success" translate="label" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Send Notification on rule accept</label>
+                    </field>
+                </group>
+        </section>
+    </system>
+</config>

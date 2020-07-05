@@ -1,0 +1,30 @@
+{
+  "name": "alvor/salesrule-confirmation",
+  "description": "Salesrule Confirmation flow",
+  "require": {
+    "php": "^7.0",
+    "magento/framework": ">=100",
+    "magento/module-sales-rule": ">=100"
+  },
+  "type": "alvor-m2-module",
+  "license": [
+    "proprietary"
+  ],
+  "autoload": {
+    "files": [
+      "registration.php"
+    ],
+    "psr-4": {
+      "Alvor\\SalesRuleConfirmation\\": ""
+    }
+  },
+  "authors": [
+    {
+      "name": "Alvor",
+      "email": "alvor@sfedu.ru"
+    }
+  ],
+  "extra": {
+    "m2-module": "Alvor_SalesRuleConfirmation"
+  }
+}

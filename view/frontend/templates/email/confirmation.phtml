@@ -1,0 +1,116 @@
+<?php
+/** @var Alvor\SalesRuleConfirmation\Block\Email\Confirm $block */
+/** @var Alvor\SalesRuleConfirmation\Model\Handlers\AbstractHandler $handler */
+$handler = $block->getHandler();
+$viewModel = $block->getViewModel();
+
+?>
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        html {
+            font-family: sans-serif;
+        }
+
+        body {
+            padding: 10px;
+        }
+
+        .btn {
+            background: #00854F;
+            color: #fff;
+            font-weight: bold;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 3px;
+        }
+
+        .btn-yes {
+            background: #00854F;
+            color: black;
+        }
+        .btn-yes:hover {
+            background: rgba(0, 133, 79, 0.8);
+        }
+        .btn-no {
+            color: #c80a3a;
+            background: none;
+            font-weight: normal;
+            text-decoration: underline;
+        }
+        .btn-no:hover {
+            color: #000;
+        }
+
+        table {
+            background: #DFE5F7;
+            border: 1px dashed #9AABC1;
+            border-left: none;
+            border-right: none;
+            width: 100%;
+        }
+
+        table th {
+            text-align: left;
+            color: #586682;
+        }
+
+        table table td {
+            border-top: 1px dotted #9AABC1;
+            font-size: 14px;
+            line-height: 26px;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+<?php if ($block->getTitle()): ?>
+    <h1><?= $block->getTitle() ?></h1>
+<?php else: ?>
+    <h1>Подтверждение акции</h1>
+<?php endif;?>
+
+<?php if (!$block->getDescription()): ?>
+<p><?= __('Promo was created or modified. Need confirmation by %1', $handler->getConfirmationPersonDescription()) ?></p>
+<?php else: ?>
+<p><?= $block->getDescription()?></p>
+<?php endif;?>
+
+<table cellpadding="5">
+    <?php foreach ($viewModel->getMainData() as $mainDataRuleInformation): ?>
+        <tr>
+            <td valign="top" style="color:#586682"><?= __($mainDataRuleInformation['name']) ?></td>
+            <td valign="top">
+                <?php if ($mainDataRuleInformation['pre_wrap']):?>
+                <div>
+                    <pre style="background:rgba(177, 207, 255, 0.65); padding: 10px;"><?php echo trim($mainDataRuleInformation['value']) ?></pre>
+                </div>
+                <?php else: ?>
+                    <?= $mainDataRuleInformation['value']?>
+                <?php endif; ?>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    <tr>
+        <td valign="top" colspan="2">
+        </td>
+    </tr>
+    <tr>
+        <td valign="top" colspan="2"></td>
+    </tr>
+</table>
+<p align="left">
+    Для просмотра правила перейдите в <a href="<?= $viewModel->getAdminUrl() ?>" target="_blank">панель
+        управления</a>. В меню выберите пункт «Маркетинг», далее «Ценовые правила для корзины».
+</p>
+<?php if($block->getCanAccept()): ?>
+<p align="center">
+<!--    style="background: #388540; color: #fff; font-weight: bold; text-decoration: none; padding: 4px 20px;"-->
+    <a  class="btn btn-yes" href="<?= $handler->getConfirmationUrl()?>" target="_blank"><?= __('Accept Rule') ?></a>
+    <a  class="btn btn-no" href="<?= $handler->getDeclineUrl()?>" target="_blank"><?= __('Decline Rule') ?></a>
+</p>
+<?php endif;?>
+</body>
+</html>

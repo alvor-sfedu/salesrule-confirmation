@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <type name="Alvor\SalesRuleConfirmation\Model\Handlers\EcommerceManagerHandler">
+        <arguments>
+            <argument name="nextHandler" xsi:type="object">Alvor\SalesRuleConfirmation\Model\Handlers\FinancialManagerHandler</argument>
+            <argument name="handlerCode" xsi:type="const">Alvor\SalesRuleConfirmation\Model\Handlers\EcommerceManagerHandler::HANDLER_CODE</argument>
+        </arguments>
+    </type>
+    <type name="Alvor\SalesRuleConfirmation\Model\Handlers\FinancialManagerHandler">
+        <arguments>
+            <argument name="handlerCode" xsi:type="const">Alvor\SalesRuleConfirmation\Model\Handlers\FinancialManagerHandler::HANDLER_CODE</argument>
+        </arguments>
+    </type>
+
+    <preference
+            for="Alvor\SalesRuleConfirmation\Model\Handlers\HandlerInterface"
+            type="Alvor\SalesRuleConfirmation\Model\Handlers\EcommerceManagerHandler"
+    />
+
+    <type name="Alvor\SalesRuleConfirmation\Model\ConfirmationProcessor">
+        <arguments>
+            <argument name="initialConfirmationPoint" xsi:type="object">Alvor\SalesRuleConfirmation\Model\Handlers\EcommerceManagerHandler</argument>
+            <argument name="successMessageResolver" xsi:type="object">SuccessMessageResolver</argument>
+        </arguments>
+    </type>
+
+    <preference
+            for="Alvor\SalesRuleConfirmation\Api\Data\ConfirmationInterface"
+            type="Alvor\SalesRuleConfirmation\Model\Confirmation"
+    />
+    <preference
+            for="Alvor\SalesRuleConfirmation\Api\ConfirmationRepositoryInterface"
+            type="Alvor\SalesRuleConfirmation\Model\ConfirmationRepository"
+    />
+
+    <type name="Magento\SalesRule\Model\Rule\Condition\Product\Subselect">
+        <plugin
+                name="fixMissedAsString"
+                type="Alvor\SalesRuleConfirmation\Plugins\Condition\Product\FixSubselectAsString"
+        />
+    </type>
+
+    <virtualType name="SalesRuleEmailDeclineNotifier" type="\Alvor\SalesRuleConfirmation\Model\Confirmation\EmailNotification">
+        <arguments>
+            <argument name="emailTitle" xsi:type="string">Rule was Declined</argument>
+            <argument name="recipientsConfigPath" xsi:type="string">confirmation/notification/on_decline</argument>
+            <argument name="emailTemplateId" xsi:type="string">salesrule_confirmation_confirm</argument>
+            <argument name="emailSubjectMainPart" xsi:type="string">Rule was Declined</argument>
+            <argument name="additionTemplateVarsProvider" xsi:type="object">Alvor\SalesRuleConfirmation\Model\Confirmation\EmailVariableProvider\Decline</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SalesRuleEmailAcceptNotifier" type="\Alvor\SalesRuleConfirmation\Model\Confirmation\EmailNotification">
+        <arguments>
+            <argument name="emailTitle" xsi:type="string">Rule was Accepted</argument>
+            <argument name="recipientsConfigPath" xsi:type="string">confirmation/notification/on_success</argument>
+            <argument name="emailTemplateId" xsi:type="string">salesrule_confirmation_confirm</argument>
+            <argument name="emailSubjectMainPart" xsi:type="string">Rule was Accepted</argument>
+            <argument name="additionTemplateVarsProvider" xsi:type="object">Alvor\SalesRuleConfirmation\Model\Confirmation\EmailVariableProvider\Accept</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="\Alvor\SalesRuleConfirmation\Model\ConfirmationProcessor">
+        <arguments>
+            <argument name="emailNotification" xsi:type="object">SalesRuleEmailAcceptNotifier</argument>
+        </arguments>
+    </type>
+
+    <type name="\Alvor\SalesRuleConfirmation\Model\DeclineProcessor">
+        <arguments>
+            <argument name="emailNotification" xsi:type="object">SalesRuleEmailDeclineNotifier</argument>
+        </arguments>
+    </type>
+
+    <type name="Alvor\SalesRuleConfirmation\Model\DataExtractorPool">
+        <arguments>
+            <argument name="extractors" xsi:type="array">
+                <item name="main" xsi:type="array">
+                    <item name="base" xsi:type="object">Alvor\SalesRuleConfirmation\Model\DataExtractor\BaseInformation</item>
+                    <item name="rule_cond" xsi:type="object">Alvor\SalesRuleConfirmation\Model\DataExtractor\RuleCondition</item>
+                    <item name="conditional_gifts" xsi:type="object">Alvor\SalesRuleConfirmation\Model\DataExtractor\ConditionalGifts</item>
+                    <item name="action_info" xsi:type="object">Alvor\SalesRuleConfirmation\Model\DataExtractor\ActionInformation</item>
+                    <item name="action_cond" xsi:type="object">Alvor\SalesRuleConfirmation\Model\DataExtractor\ActionCondition</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
+    <virtualType name="SuccessMessageResolver" type="Alvor\SalesRuleConfirmation\Model\Confirmation\AbstractMessageResolver">
+        <arguments>
+            <argument name="messageList" xsi:type="array">
+                <item name="ecom" xsi:type="array">
+                    <item name="type" xsi:type="const">Alvor\SalesRuleConfirmation\Model\Handlers\EcommerceManagerHandler::HANDLER_CODE</item>
+                    <item name="text" xsi:type="string">Promo Confirmed. Email was send to Digital Director</item>
+                </item>
+                <item name="fin" xsi:type="array">
+                    <item name="type" xsi:type="const">Alvor\SalesRuleConfirmation\Model\Handlers\FinancialManagerHandler::HANDLER_CODE</item>
+                    <item name="text" xsi:type="string">Promo Confirmed. Promo Activated</item>
+                </item>
+            </argument>
+            <argument name="defaultMessage" xsi:type="string">Confirmation successful</argument>
+        </arguments>
+    </virtualType>
+
+</config>
